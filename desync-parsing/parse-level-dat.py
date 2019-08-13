@@ -13,7 +13,7 @@ from optparse import OptionParser
 
 
 ## Global variables
-opts = []
+opts = Null
 
 
 ## Write a single raw byte to file (will be made superfluous soon)
