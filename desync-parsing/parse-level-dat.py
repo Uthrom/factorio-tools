@@ -7,9 +7,10 @@
   Does convert binary data into it's readable integer equivalent, for better or worse.
 '''
 
-## Import stuff
+## Import modules
 import sys
 from optparse import OptionParser
+
 
 ## Global variables
 opts = []
@@ -17,10 +18,12 @@ opts = []
 
 ## Write a single raw byte to file (will be made superfluous soon)
 def byte_to_file(file, byte):
+  '''byte_to_file(file, byte) -- writes <byte> to <file>'''
   if file and byte:
     file.write(byte)
 
-# Make a string of bytes human-readable
+
+## Make a string of bytes human-readable
 def sanitize_string(s, newline=0):
   d = ord(s)
   if d < 32 and d != 10:
@@ -40,7 +43,7 @@ def sanitize_string(s, newline=0):
     return chr(d)
 
 
-# Write a string to file, possibly indenting appropriately
+## Write a string to file, possibly indenting appropriately
 def string_to_file(file, s, indent = 0, leaving = 0):
   if file and s:
     if not leaving:
@@ -58,7 +61,7 @@ def string_to_file(file, s, indent = 0, leaving = 0):
     if leaving:
       file.write("\n")
 
-# Suck in an entire <...> XML-ish tag, and return whether it's opening or closing
+## Suck in an entire <...> XML-ish tag, and return whether it's opening or closing
 def slurp_tag(file, indent = 0):
   if file:
     file.seek(file.tell()-1)
@@ -76,10 +79,11 @@ def slurp_tag(file, indent = 0):
 
       tag += sanitize_string(b, 1)
 
-##    if leaving:
-##      sys.stderr.write("OUT " + str(indent) + ": " + tag + "\n")
-##    else:
-##      sys.stderr.write("IN " + str(indent) + ": " + tag + "\n")
+      if opts.DEBUG:
+        if leaving:
+          sys.stderr.write("OUT " + str(indent) + ": " + tag + "\n")
+        else:
+          sys.stderr.write("IN " + str(indent) + ": " + tag + "\n")
       
     return (tag, leaving, indent)
 
@@ -95,12 +99,9 @@ def main():
     parser.error("incorrect number of arguments")
     sys.exit(1)
 
-  # main code
-  with open(args[1], 'w') as outF:
-    with open(args[2], 'rb') as inF:
-
+  with open(args[0], 'w') as outF:
+    with open(args[1], 'rb') as inF:
       indent = 0
-      debugI = 0
 
       while True:
         byte = inF.read(1)
@@ -108,9 +109,6 @@ def main():
         if byte == b'':
           sys.stderr.write('Quitting')
           break
-        
-        # debugI += 1
-        # sys.stderr.write(str(i) + ": " + str(d) + "\n")
         
         d = ord(byte)
         if d == 60:
