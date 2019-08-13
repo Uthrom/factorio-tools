@@ -99,8 +99,8 @@ def main():
     parser.error("incorrect number of arguments")
     sys.exit(1)
 
-  with open(args[0], 'w') as outF:
-    with open(args[1], 'rb') as inF:
+  with open(args[1], 'w') as outF:
+    with open(args[0], 'rb') as inF:
       indent = 0
 
       while True:
