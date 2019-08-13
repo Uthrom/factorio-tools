@@ -11,11 +11,6 @@
 import sys
 from optparse import OptionParser
 
-
-## Global variables
-opts = Null
-
-
 ## Write a single raw byte to file (will be made superfluous soon)
 def byte_to_file(file, byte):
   '''byte_to_file(file, byte) -- writes <byte> to <file>'''
@@ -62,7 +57,7 @@ def string_to_file(file, s, indent = 0, leaving = 0):
       file.write("\n")
 
 ## Suck in an entire <...> XML-ish tag, and return whether it's opening or closing
-def slurp_tag(file, indent = 0):
+def slurp_tag(file, indent = 0, DEBUG = False):
   if file:
     file.seek(file.tell()-1)
     tag = "<"
@@ -79,7 +74,7 @@ def slurp_tag(file, indent = 0):
 
       tag += sanitize_string(b, 1)
 
-      if opts.DEBUG:
+      if DEBUG:
         if leaving:
           sys.stderr.write("OUT " + str(indent) + ": " + tag + "\n")
         else:
@@ -114,7 +109,7 @@ def main():
         if d == 60:
           indent += 1
           
-          (buf, leaving, indent) = slurp_tag(inF, indent)
+          (buf, leaving, indent) = slurp_tag(inF, indent, opts.DEBUG)
 
           if leaving:
             indent -= 1
