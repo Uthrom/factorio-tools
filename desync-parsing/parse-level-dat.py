@@ -1,12 +1,26 @@
 #!/usr/local/bin/python3
+'''\
+%prog [options] <infile> <outfile>
 
+  Parses Factorio's desync report level_with_tags_tick_XXXXXXX.dat files into something more human readable, while trying to preserve the base data as much as possible.
+
+  Does convert binary data into it's readable integer equivalent, for better or worse.
+'''
+
+## Import stuff
 import sys
+from optparse import OptionParser
 
-# Setup Functions
+## Global variables
+opts = []
+
+
+## Write a single raw byte to file (will be made superfluous soon)
 def byte_to_file(file, byte):
   if file and byte:
     file.write(byte)
 
+# Make a string of bytes human-readable
 def sanitize_string(s, newline=0):
   d = ord(s)
   if d < 32 and d != 10:
@@ -26,6 +40,7 @@ def sanitize_string(s, newline=0):
     return chr(d)
 
 
+# Write a string to file, possibly indenting appropriately
 def string_to_file(file, s, indent = 0, leaving = 0):
   if file and s:
     if not leaving:
@@ -43,6 +58,7 @@ def string_to_file(file, s, indent = 0, leaving = 0):
     if leaving:
       file.write("\n")
 
+# Suck in an entire <...> XML-ish tag, and return whether it's opening or closing
 def slurp_tag(file, indent = 0):
   if file:
     file.seek(file.tell()-1)
@@ -68,14 +84,20 @@ def slurp_tag(file, indent = 0):
     return (tag, leaving, indent)
 
 
+## Most of  the work happens here
 def main():
-  if(len(sys.argv) < 2):
-    sys.stderr.write("USAGE: "+ sys.argv[0] + " <inputfile> <outputfile>\n\n")
+  parser = OptionParser(usage=__doc__, version='%prog v0.2')
+  parser.add_option('-d', '--debug', action='store_true', default=False, dest='DEBUG', help='Enable debug mode')
+
+  (opts, args) = parser.parse_args()
+
+  if(len(args) < 2):
+    parser.error("incorrect number of arguments")
     sys.exit(1)
 
   # main code
-  with open(sys.argv[2], 'w') as outF:
-    with open(sys.argv[1], 'rb') as inF:
+  with open(args[1], 'w') as outF:
+    with open(args[2], 'rb') as inF:
 
       indent = 0
       debugI = 0
