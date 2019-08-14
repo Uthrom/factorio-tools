@@ -35,7 +35,7 @@ def from_file(file, num = 1):
 
 ## Make a string of bytes human-readable
 def sanitize_string(s, convert_newline=1):
-  '''sanitize_string(string, convert_newlines) -- makes <string> human-readable, possibly converting newlines to str(10)'''
+  '''sanitize_string(string, convert_newline) -- makes <string> human-readable, possibly converting newlines to str(10)'''
   d = ord(s)
   if d < 32 and d != 10:
     return str(d)
