@@ -34,13 +34,13 @@ def from_file(file, num = 1):
 
 
 ## Make a string of bytes human-readable
-def sanitize_string(s, newline=0):
-  '''sanitize_string(string, convert_newlines) -- makes <string> human-readable, possibly converting newlines'''
+def sanitize_string(s, convert_newline=1):
+  '''sanitize_string(string, convert_newlines) -- makes <string> human-readable, possibly converting newlines to str(10)'''
   d = ord(s)
   if d < 32 and d != 10:
     return str(d)
   elif d == 10:
-    if newline:
+    if not newline:
       return "\n"
     else:
       return str(d)
@@ -88,7 +88,7 @@ def slurp_tag(file, indent = 0, DEBUG = False):
         leaving = True
         indent -= 1
 
-      tag += sanitize_string(b, 1)
+      tag += sanitize_string(b)
 
       if DEBUG:
         if leaving:
