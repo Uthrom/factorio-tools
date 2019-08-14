@@ -40,10 +40,10 @@ def sanitize_string(s, convert_newline=1):
   if d < 32 and d != 10:
     return str(d)
   elif d == 10:
-    if not newline:
-      return "\n"
-    else:
+    if convert_newline:
       return str(d)
+    else:
+      return "\n"
   elif d == 45:
     return chr(d)
   elif d == 64:
