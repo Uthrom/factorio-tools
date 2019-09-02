@@ -1,2 +1,5 @@
+# Shell-fu for finding factorio binary on Mac OS X
 FACTORIO="`ls -t /Applications/*factorio*/Contents/MacOS/factorio | head -n 1 | sed -e 's/*//g'`"
-STOCK_MODS="dom"
+
+# Default MOD folder
+STOCK_MODS="default"
