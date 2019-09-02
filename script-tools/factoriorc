@@ -1,0 +1,2 @@
+FACTORIO="`ls -t /Applications/*factorio*/Contents/MacOS/factorio | head -n 1 | sed -e 's/*//g'`"
+STOCK_MODS="dom"
