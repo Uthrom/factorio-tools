@@ -17,7 +17,9 @@ USAGE: `basename $0` [ -h | -m <NUM> | -t <NUM> | -r <NUM> | ] -o <OUTFILE> save
  -r <NUM>		Number of times to run benchmark
  -o <OUTFILE>	Output to <OUTFILE> instead of stdout
 
-This script used to simplify running factorio(1) benchmarks, it lets you specify the list of save files to run, how many minutes (or ticks) to run each file, and how often to re-run the benchmark, if anything.
+This script used to simplify running factorio(1) benchmarks, it lets you specify
+the list of save files to run, how many minutes (or ticks) to run each file, and
+how often to re-run the benchmark, if anything.
 
 The output is saved to the output file specified.
 __EOF
