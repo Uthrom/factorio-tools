@@ -3,7 +3,7 @@
 FACTORIO_RUN=0
 FACTORIORC="$HOME/.factoriorc"                  # Local settings here
 FACTORIO=""
-STOCK_MODS=""
+DEFAULT_MODS=""
 FACTORIO_DATA="$HOME/Library/Application Support/factorio"
 FACTORIO_MODS="$FACTORIO_DATA/mods"
 
@@ -40,8 +40,8 @@ shift "$(($OPTIND -1))"
 if [ "x" != "x$1" ]; then
   NEW_MODS="$1"
 else
-  echo "No mod directory passed, using '$STOCK_MODS'"
-  NEW_MODS="$STOCK_MODS" 
+  echo "No mod directory passed, using '$DEFAULT_MODS'"
+  NEW_MODS="$DEFAULT_MODS" 
 fi
 
 if [ "x" == "x$NEW_MODS" ]; then
