@@ -9,7 +9,7 @@ fi
 
 function usage {
   cat << __EOF
-USAGE: `basename $0` [ -h | -m <NUM> | -t <NUM> | -r <NUM> | ] -o <OUTFILE> save1 save2 .. saveN
+USAGE: `basename $0` [ -h | -m <NUM> | -t <NUM> | -r <NUM> | -o <OUTFILE> ] save1 save2 .. saveN
 
  -h         	Displays this help
  -m <NUM>		Number of minutes of game time to run each benchmark
@@ -21,7 +21,7 @@ This script used to simplify running factorio(1) benchmarks, it lets you specify
 the list of save files to run, how many minutes (or ticks) to run each file, and
 how often to re-run the benchmark, if anything.
 
-The output is saved to the output file specified.
+The output is printed to STDOUT or saved to the output file specified.
 __EOF
   exit 1
 }
@@ -29,7 +29,7 @@ __EOF
 B_MINS=0
 B_TICKS=`echo "$B_MINS * 3600" | bc`
 B_RUNS=0
-OUTPUT="benchmark-out"
+OUTPUT=""
 
 while getopts "hm:t:r:o:" OPTION; do
   case $OPTION in
@@ -57,20 +57,23 @@ if [ $# -lt 1 ]; then
   usage
 fi
 
-if [ "x" == "x$OUTPUT" ]; then
-  OUTPUT="`echo $1 | sed -e 's/\.zip//'`"
-fi
-
 if [ $B_TICKS -lt 1 ] && [ $B_MINS -gt 0 ]; then
   B_TICKS=`echo "$B_MINS * 3600" | bc`
 fi
 
 for FILE in $*; do
   if [ -f $FILE ]; then
-    (
-      /bin/echo -n "$FILE,"
-      $FACTORIO --benchmark $FILE --benchmark-ticks $B_TICKS --benchmark-runs $B_RUNS 2>&1 | awk "/Performed.*updates/ {print \$5}" | xargs echo  | sed -e 's/ /,/g'
-    ) | sed -e 's/\n//g' >> $OUTPUT.csv
+    if [ "x" == "x$OUTPUT" ]; then
+      (
+        /bin/echo -n "$FILE,"
+        $FACTORIO --benchmark $FILE --benchmark-ticks $B_TICKS --benchmark-runs $B_RUNS 2>&1 | awk "/Performed.*updates/ {print \$5}" | xargs echo  | sed -e 's/ /,/g'
+      ) | sed -e 's/\n//g'
+    else
+      ( 
+        /bin/echo -n "$FILE," 
+        $FACTORIO --benchmark $FILE --benchmark-ticks $B_TICKS --benchmark-runs $B_RUNS 2>&1 | awk "/Performed.*updates/ {print \$5}" | xargs echo  | sed -e 's/ /,/g'
+      ) | sed -e 's/\n//g' >> $OUTPUT.csv
+    fi
   else
     echo "File '$FILE' not found!"
   fi
