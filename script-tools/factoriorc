@@ -1,5 +1,12 @@
+# .factoriorc
+# 
+# This file goes in $HOME/
+# Mostly, I made this to break out some privacy-senstive information from the
+# other scripts, also allowing these to be in /usr/local/bin on MP machines
+# instead of in a user's home directory
+
 # Shell-fu for finding factorio binary on Mac OS X
 FACTORIO="`ls -t /Applications/*factorio*/Contents/MacOS/factorio | head -n 1 | sed -e 's/*//g'`"
 
-# Default MOD folder
-STOCK_MODS="default"
+# Default MOD folder for factorio-mod-switch.sh
+DEFAULT_MODS="default"
