@@ -17,12 +17,14 @@ function usage {
   cat << __EOF
 USAGE: `basename $0` [ -h | -m <NUM> | -t <NUM> | -r <NUM> | -o <OUTFILE> ] save1 save2 .. saveN
 
- -h         	Displays this help
+ -h			Displays this help
+ -d			Enable debug mode (logs to stderr)
  -m <NUM>		Number of minutes of game time to run each benchmark
  -t <NUM>		Number of ticks to run each benchmark
  -r <NUM>		Number of times to run benchmark
- -o <OUTFILE>	Output to <OUTFILE> instead of stdout
+ -o <OUTFILE>		Output to <OUTFILE> instead of stdout
 
+ 
 This script used to simplify running factorio(1) benchmarks, it lets you specify
 the list of save files to run, how many minutes (or ticks) to run each file, and
 how often to re-run the benchmark, if anything.
@@ -36,11 +38,15 @@ B_MINS=0
 B_TICKS=`echo "$B_MINS * 3600" | bc`
 B_RUNS=1
 OUTPUT=""
+DEBUG=0
 
-while getopts "hm:t:r:o:" OPTION; do
+while getopts "dhm:t:r:o:" OPTION; do
   case $OPTION in
     h)
       usage
+      ;;
+    d)
+      DEBUG=1
       ;;
     m)
       B_MINS=$OPTARG
@@ -70,6 +76,9 @@ fi
 for FILE in $*; do
   if [ -f $FILE ]; then
       ( 
+	if [ $DEBUG -gt 0 ]; then
+          echo "RUNNING: $FACTORIO --benchmark $FILE --benchmark-ticks $B_TICKS --benchmark-runs $B_RUNS" > /dev/stderr
+	fi
         /bin/echo -n "$FILE," 
         $FACTORIO --benchmark $FILE --benchmark-ticks $B_TICKS --benchmark-runs $B_RUNS 2>&1 | awk "/Performed.*updates/ {print \$5}" | xargs echo  | sed -e 's/ /,/g'
       ) | sed -e 's/\n//g' >> $TMP
