@@ -91,5 +91,5 @@ done
 if [ "x" == "x$OUTPUT" ]; then
   cat $TMP
 else
-  cp $TMP $OUTPUT.csv
+  cp $TMP $OUTPUT
 fi
