@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TMP="/tmp/`basename $0`.$$"			# Temp file
+TMP=".`basename $0`.tmp.$$"			# Temp file is scriptname.tmp.{PID}
 trap 'rm -f $TMP' 0 1 9 11 15			# Clean up on exit
 
 rm -f $TMP					# Did somebody else leave this?
